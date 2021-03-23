@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import {DataCategory} from 'app/types';
 import {formatBytesBase10} from 'app/utils';
 
@@ -69,4 +71,26 @@ export function abbreviateUsageNumber(n: number) {
 
   // Do not show decimals
   return n.toFixed().toLocaleString();
+}
+
+export function getDateFromMoment(m: moment.Moment) {
+  return m.format('MMM D');
+}
+
+export function getDateFromUnixTimestamp(timestamp: number) {
+  const date = moment.unix(timestamp);
+  return getDateFromMoment(date);
+}
+
+export function getDateRange(dateStart: string, dateEnd: string): string[] {
+  const range: string[] = [];
+  const start = moment(dateStart);
+  const end = moment(dateEnd);
+
+  while (!start.isAfter(end, 'd')) {
+    range.push(getDateFromMoment(start));
+    start.add(1, 'd');
+  }
+
+  return range;
 }

@@ -68,13 +68,29 @@ class UsageStatsOrganization extends AsyncComponent<Props, State> {
   } {
     const {dataCategory} = this.state;
 
+    const stats = [] as any[];
+    for (let i = 1; i <= 31; i++) {
+      stats.push({
+        date: `Mar ${i}`,
+        total: 5000,
+        accepted: 2000,
+        filtered: 1000,
+        dropped: {
+          total: 2000,
+          overQuota: 1000,
+          spikeProtection: 500,
+          other: 500,
+        },
+      });
+    }
+
     const formatOptions = {
       isAbbreviated: dataCategory !== DataCategory.ATTACHMENTS,
       useUnitScaling: dataCategory === DataCategory.ATTACHMENTS,
     };
 
     return {
-      stats: [],
+      stats,
       total: formatUsageWithUnits(0, dataCategory, formatOptions),
       accepted: formatUsageWithUnits(0, dataCategory, formatOptions),
       dropped: formatUsageWithUnits(0, dataCategory, formatOptions),
@@ -132,13 +148,13 @@ class UsageStatsOrganization extends AsyncComponent<Props, State> {
     );
   }
 
-  renderChart(e?: Error) {
+  renderChart(error?: Error) {
     // TODO(leedongwei): Poke someone for a error-state design
-    if (this.state.error || e) {
+    if (this.state.error || error) {
       return (
         <Panel>
           <PanelBody>
-            <p>UsageStatsOrganization has an error: {e?.message}</p>
+            <p>UsageStatsOrganization has an error: {error?.message}</p>
           </PanelBody>
         </Panel>
       );
